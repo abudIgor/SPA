@@ -8,7 +8,7 @@ const Address = ({data, updateFieldHandler}) => {
             <input 
                 className="general-input" 
                 placeholder="Endereço/CEP" 
-                onBlur={(e) => updateFieldHandler("address",e.target.value)}>
+                onChange={(e) => updateFieldHandler("address",e.target.value)}>
             </input>
         </div>
     );

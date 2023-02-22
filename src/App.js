@@ -1,11 +1,16 @@
 import React, { useState } from "react";
+
+/*Import React Components*/
 import Header from "./components/Header";
 import NextButton from "./components/NextButton";
 import Address from "./components/Address";
 import PersonalData from "./components/PersonalData";
+import Products from "./components/Products";
 
+/*Import Css*/
 import './App.css';
 
+/*Import Hooks*/
 import {useChangeStep} from "./hooks/useChangeStep";
 
 const formTemplate = {
@@ -13,50 +18,85 @@ const formTemplate = {
   email: "",
   phone: "",
   address : "",
+  productCode : "",
 }
+
+const products = [
+  {
+    productCode : 'BL_100MB',
+    productName : 'Banda Larga 100 Megas',
+    price       : '99.99'
+  },
+  {
+    productCode : 'BL_200MB',
+    productName : 'Banda Larga 200 Megas',
+    price       : '129.99'
+  },
+  {
+    productCode : 'BL_300MB',
+    productName : 'Banda Larga 300 Megas',
+    price       : '199.99'
+  },
+  {
+    productCode : 'BL_400MB',
+    productName : 'Banda Larga 400 Megas',
+    price       : '259.99'
+  },
+  {
+    productCode : 'BL_500MB',
+    productName : 'Banda Larga 400 Megas',
+    price       : '299.99'
+  },
+]
 
 const App = () => {
 
   const [buttonState, setButtonState] = useState(true);
-
   const [data, setData] = useState(formTemplate);
 
   const updateFieldHandler = (key,value) => {
-
-    if(data.address) {
-      document.querySelector('button')?.classList.add('enabled');
-      setButtonState(false);
-    } else {
-      document.querySelector('button')?.classList.remove('enabled');
-      setButtonState(true);
-    }
-
+    handleChangeStateButton();
     setData((prev) => {
       return {...prev, [key]: value};
     })
+  }
 
-    console.log(data)
+  const handleChangeStateButton = () => {
+    if      (currentStep === 1 && data.address) enableButton()
+    else if (currentStep === 2 && data.email && data.name && data.phone) enableButton()
+    else     disableButton()
+  }
+
+  const enableButton = () => {
+    document.querySelector('button')?.classList.add('enabled');
+    setButtonState(false);
+  }
+
+  const disableButton = () => {
+    document.querySelector('button')?.classList.remove('enabled');
+    setButtonState(true);
   }
 
   const formComponents = [<Address data={data} updateFieldHandler={updateFieldHandler}/>,
-                          <PersonalData/>,
-                          <Address/>,
+                          <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
+                          <Products data={data} updateFieldHandler={updateFieldHandler} products={products} />,
                           <Address/>,
                           <Address/>];
 
   const {currentStep,changeStep,currentComponent,isFinalStep} = useChangeStep(formComponents);
 
-  
-
   const handleChangeStep = () => {
-      changeStep(currentStep+1);
-      setStateButton();
+    console.log(currentStep)
+    if(currentStep === 2) {
+      getAdrress()
+    }
+    
+    changeStep(currentStep+1);
+    disableButton();
   }
 
-  const setStateButton = () => {
-    if(isFinalStep) {
-      document.querySelector('button')?.classList.add('disabled');
-    }
+  const getAdrress = () => {
+    console.log('getAdress')
   }
 
   return (
