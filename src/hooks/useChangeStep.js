@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export function useChangeStep(steps) {
+    
     const [currentStep, setCurrentStep] = useState(1);
 
     function changeStep(index) {
@@ -12,5 +13,7 @@ export function useChangeStep(steps) {
     return {
         currentStep,
         changeStep,
+        currentComponent: steps[currentStep-1],
+        isFinalStep: currentStep + 1 === steps.length ? true : false
     };
 }
