@@ -18,7 +18,7 @@ const formTemplate = {
   email: "",
   phone: "",
   address : "",
-  productCode : "",
+  selectedProductCode : "",
 }
 
 const products = [
@@ -44,26 +44,45 @@ const products = [
   },
   {
     productCode : 'BL_500MB',
-    productName : 'Banda Larga 400 Megas',
+    productName : 'Banda Larga 500 Megas',
     price       : '299.99'
   },
 ]
+
+let hasSelectedProduct = ''
 
 const App = () => {
 
   const [buttonState, setButtonState] = useState(true);
   const [data, setData] = useState(formTemplate);
+  const [productCode, setProductCode] = useState();
 
   const updateFieldHandler = (key,value) => {
-    handleChangeStateButton();
+    if(value?.nativeEvent?.srcElement?.id) {
+      handleSelectedProduct(value.nativeEvent.srcElement.id);
+      value = value.nativeEvent.srcElement.id;
+      hasSelectedProduct = value
+    }
+
     setData((prev) => {
       return {...prev, [key]: value};
     })
+   
+    handleChangeStateButton();
+  }
+
+  const handleSelectedProduct = (selectedProduct) => {
+    if(selectedProduct !== productCode) {
+      document.getElementById(productCode)?.classList.remove("selected-product");
+      setProductCode(selectedProduct);
+      document.getElementById(selectedProduct).classList.add("selected-product");
+    }
   }
 
   const handleChangeStateButton = () => {
     if      (currentStep === 1 && data.address) enableButton()
     else if (currentStep === 2 && data.email && data.name && data.phone) enableButton()
+    else if (currentStep === 3 && hasSelectedProduct) enableButton()
     else     disableButton()
   }
 
@@ -86,17 +105,9 @@ const App = () => {
   const {currentStep,changeStep,currentComponent,isFinalStep} = useChangeStep(formComponents);
 
   const handleChangeStep = () => {
-    console.log(currentStep)
-    if(currentStep === 2) {
-      getAdrress()
-    }
-    
     changeStep(currentStep+1);
     disableButton();
-  }
-
-  const getAdrress = () => {
-    console.log('getAdress')
+    console.log('data>>>',data)
   }
 
   return (

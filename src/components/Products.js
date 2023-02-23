@@ -1,15 +1,18 @@
 import React from "react";
-import Product from "./Product";
 
 const Products = ({data, updateFieldHandler, products}) => {
-    console.log(products)
     return(
-        <div className="products-container">
-            {products.map(product => (
-                <Product key={product.productCode} product={product}></Product>
-            ))}
+        <div>
+            <div className="products-container">
+                {products.map(product => (
+                    <div className="product-container" key={product.productCode} id={product.productCode} onClick={(e) => updateFieldHandler("selectedProductCode",e)}>
+                        {product.productName}
+                        {product.price}
+                    </div>
+                ))}
+            </div>
         </div>
-    )
+    ) 
 }
 
 export default Products
