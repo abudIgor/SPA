@@ -6,8 +6,8 @@ const Products = ({data, updateFieldHandler, products}) => {
             <div className="products-container">
                 {products.map(product => (
                     <div className="product-container" key={product.productCode} id={product.productCode} onClick={(e) => updateFieldHandler("selectedProductCode",e)}>
-                        {product.productName}
-                        {product.price}
+                        <div>{product.productName}</div>
+                        <div>Por Apenas R${product.price}/mês</div> 
                     </div>
                 ))}
             </div>

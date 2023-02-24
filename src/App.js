@@ -6,6 +6,7 @@ import NextButton from "./components/NextButton";
 import Address from "./components/Address";
 import PersonalData from "./components/PersonalData";
 import Products from "./components/Products";
+import Slots from "./components/Slots";
 
 /*Import Css*/
 import './App.css';
@@ -19,33 +20,32 @@ const formTemplate = {
   phone: "",
   address : "",
   selectedProductCode : "",
+  selectedSlot: ""
 }
 
-const products = [
+let products = [
+]
+
+const slotsAvaiable = [
   {
-    productCode : 'BL_100MB',
-    productName : 'Banda Larga 100 Megas',
-    price       : '99.99'
+    day  : "23-02-2023",
+    hour : "08:00"
   },
   {
-    productCode : 'BL_200MB',
-    productName : 'Banda Larga 200 Megas',
-    price       : '129.99'
+    day  : "23-02-2023",
+    hour : "09:00"
   },
   {
-    productCode : 'BL_300MB',
-    productName : 'Banda Larga 300 Megas',
-    price       : '199.99'
+    day  : "23-02-2023",
+    hour : "09:30"
   },
   {
-    productCode : 'BL_400MB',
-    productName : 'Banda Larga 400 Megas',
-    price       : '259.99'
+    day  : "24-02-2023",
+    hour : "10:30"
   },
   {
-    productCode : 'BL_500MB',
-    productName : 'Banda Larga 500 Megas',
-    price       : '299.99'
+    day  : "25-02-2023",
+    hour : "08:30"
   },
 ]
 
@@ -83,6 +83,7 @@ const App = () => {
     if      (currentStep === 1 && data.address) enableButton()
     else if (currentStep === 2 && data.email && data.name && data.phone) enableButton()
     else if (currentStep === 3 && hasSelectedProduct) enableButton()
+    else if (currentStep === 4 && hasSelectedProduct) enableButton()
     else     disableButton()
   }
 
@@ -98,16 +99,51 @@ const App = () => {
 
   const formComponents = [<Address data={data} updateFieldHandler={updateFieldHandler}/>,
                           <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
-                          <Products data={data} updateFieldHandler={updateFieldHandler} products={products} />,
-                          <Address/>,
+                          <Products data={data} updateFieldHandler={updateFieldHandler} products={products}/>,
+                          <Slots data={data} updateFieldHandler={updateFieldHandler} slotsAvaiable={slotsAvaiable}/>,
                           <Address/>];
 
   const {currentStep,changeStep,currentComponent,isFinalStep} = useChangeStep(formComponents);
 
   const handleChangeStep = () => {
+    
+    if(currentStep === 2) {
+      getOffers();
+    }
+    
     changeStep(currentStep+1);
     disableButton();
     console.log('data>>>',data)
+  }
+
+  const getOffers = () => {
+    products = [ 
+      {
+        productCode : 'BL_100MB',
+        productName : 'Banda Larga 100 Megas',
+        price       : '99.99'
+      },
+      {
+        productCode : 'BL_200MB',
+        productName : 'Banda Larga 200 Megas',
+        price       : '129.99'
+      },
+      {
+        productCode : 'BL_300MB',
+        productName : 'Banda Larga 300 Megas',
+        price       : '199.99'
+      },
+      {
+        productCode : 'BL_400MB',
+        productName : 'Banda Larga 400 Megas',
+        price       : '259.99'
+      },
+      {
+        productCode : 'BL_500MB',
+        productName : 'Banda Larga 500 Megas',
+        price       : '299.99'
+      },
+    ]
   }
 
   return (
