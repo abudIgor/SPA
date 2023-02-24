@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+
+/*Import APIs*/
+import apiCEP from "./api/apiCEP";
 
 /*Import React Components*/
 import Header from "./components/Header";
 import NextButton from "./components/NextButton";
-import Address from "./components/Address";
+import Cep from "./components/Cep";
 import PersonalData from "./components/PersonalData";
 import Products from "./components/Products";
 import Slots from "./components/Slots";
+import Address from "./components/Address";
 
 /*Import Css*/
 import './App.css';
@@ -14,14 +18,38 @@ import './App.css';
 /*Import Hooks*/
 import {useChangeStep} from "./hooks/useChangeStep";
 
+
 const formTemplate = {
   name : "",
   email: "",
   phone: "",
-  address : "",
+  cep : "",
   selectedProductCode : "",
-  selectedSlot: ""
+  selectedSlot: "",
+  bairro: "",
+  complemento : "",
+  ddd : "",
+  gia : "",
+  ibge : "",
+  localidade: "",
+  logradouro: "",
+  siafi : "",
+  uf : ""
 }
+
+let addressObj = {
+  bairro: "",
+  cep : "",
+  complemento : "",
+  ddd : "",
+  gia : "",
+  ibge : "",
+  localidade: "",
+  logradouro: "",
+  siafi : "",
+  uf : ""
+}
+
 
 let products = [
 ]
@@ -55,7 +83,7 @@ const App = () => {
 
   const [buttonState, setButtonState] = useState(true);
   const [data, setData] = useState(formTemplate);
-  const [productCode, setProductCode] = useState();
+  const [productCode, setProductCode] = useState({});
 
   const updateFieldHandler = (key,value) => {
     if(value?.nativeEvent?.srcElement?.id) {
@@ -80,10 +108,11 @@ const App = () => {
   }
 
   const handleChangeStateButton = () => {
-    if      (currentStep === 1 && data.address) enableButton()
-    else if (currentStep === 2 && data.email && data.name && data.phone) enableButton()
-    else if (currentStep === 3 && hasSelectedProduct) enableButton()
+    if      (currentStep === 1 && data.cep) enableButton()
+    else if (currentStep === 2 && data.logradouro && data.complemento && data.complemento && data.bairro && data.uf) enableButton()
+    else if (currentStep === 3 && data.email && data.name && data.phone) enableButton()
     else if (currentStep === 4 && hasSelectedProduct) enableButton()
+    else if (currentStep === 5 && hasSelectedProduct) enableButton()
     else     disableButton()
   }
 
@@ -97,23 +126,39 @@ const App = () => {
     setButtonState(true);
   }
 
-  const formComponents = [<Address data={data} updateFieldHandler={updateFieldHandler}/>,
+  const formComponents = [<Cep data={data} updateFieldHandler={updateFieldHandler}/>,
+                          <Address data={data} updateFieldHandler={updateFieldHandler}/>,
                           <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
                           <Products data={data} updateFieldHandler={updateFieldHandler} products={products}/>,
                           <Slots data={data} updateFieldHandler={updateFieldHandler} slotsAvaiable={slotsAvaiable}/>,
-                          <Address/>];
+                          <Cep data={data} updateFieldHandler={updateFieldHandler}/>];
 
   const {currentStep,changeStep,currentComponent,isFinalStep} = useChangeStep(formComponents);
 
   const handleChangeStep = () => {
-    
-    if(currentStep === 2) {
-      getOffers();
+    if(currentStep === 1) {
+      getAddressByCep(data.cep).then((resp) => {
+        console.log(resp.data)
+        if(resp.data) {
+          addressObj = resp.data
+
+          Object.keys(resp.data).forEach(elem => {
+            updateFieldHandler(elem,resp.data[elem])
+          })
+          changeStep(currentStep+1);
+          disableButton();
+        }
+      })
     }
     
+    if(currentStep === 3) {
+      getOffers();
+    }
+
     changeStep(currentStep+1);
     disableButton();
     console.log('data>>>',data)
+    
   }
 
   const getOffers = () => {
@@ -144,6 +189,11 @@ const App = () => {
         price       : '299.99'
       },
     ]
+  }
+
+  const getAddressByCep = async (cep) => {
+    const res = await apiCEP.get(cep+"/json");
+    return await res;
   }
 
   return (
