@@ -14,6 +14,5 @@ export function useChangeStep(steps) {
         currentStep,
         changeStep,
         currentComponent: steps[currentStep-1],
-        isFinalStep: currentStep + 1 === steps.length ? true : false
     };
 }

@@ -6,7 +6,7 @@ const Header = (props) => {
                               [2,"CONFIRME SEU ENDEREÇO"],
                               [3,"INFORME SEUS DADOS"],
                               [4,"ESCOLHA UMA OFERTA DISPONÍVEL"],
-                              [5,"ESCOLHA A FORMA DE PAGAMENTO"],
+                              [5,"ESCOLHA UM HORÁRIO PARA INSTALAÇÃO"],
                               [6,"RESUMO DO PEDIDO"]])
     
     return (

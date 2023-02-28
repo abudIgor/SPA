@@ -7,6 +7,7 @@ const NextButton = ({children,onClick,isDisabled}) => {
                                        [2,"Inserir Dados"],
                                        [3,"Avançar"],
                                        [4,"Avançar"],
+                                       [5,"Avançar"],
                                        [5,"Avançar"]]);
     
     return (

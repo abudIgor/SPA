@@ -31,15 +31,21 @@
 }
 
 .enabled {
-   background-color:  #00AB0F;
-   border-radius: 25px;
-   width: 150px;
-   height: 35px;
-   border: none;
-   color: whitesmoke;
-   cursor: pointer;
-   opacity: 1;
+    background-color:  #00AB0F;
+    border-radius: 25px;
+    width: 150px;
+    height: 35px;
+    border: none;
+    color: whitesmoke;
+    cursor: pointer;
+    opacity: 1;
 }
+
+.hidden-button {
+    display: none;
+}
+
+
 
 .container-button {
     width: 95vw;
@@ -124,4 +130,45 @@
     background-color: #009E0C;
     border: 2px solid silver;
     width: 85vw;
+}
+
+.modal {
+    display: flex;
+    position: fixed;
+    top: 180px;
+    margin-right: auto;
+    margin-left: 0%;
+    display: none;
+    border: 2px solid #009E0C;
+    height: 400px;
+    max-width: 400px;
+    min-width: 300px;
+    width: 80vw;
+    background-color: whitesmoke;
+    border-radius: 20px;
+}
+
+.display-modal {
+    display: block;
+}
+
+.hidden-modal {
+    display: none;
+}
+
+.close-icon-container {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 10px;
+}
+
+.close-icon {
+    border-radius: 50%;
+    border: 1px solid red;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }

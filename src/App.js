@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, {useState } from "react";
 
 /*Import APIs*/
 import apiCEP from "./api/apiCEP";
@@ -11,6 +11,8 @@ import PersonalData from "./components/PersonalData";
 import Products from "./components/Products";
 import Slots from "./components/Slots";
 import Address from "./components/Address";
+import Order from "./components/Order";
+import ModalErro from "./components/ModalErro";
 
 /*Import Css*/
 import './App.css';
@@ -37,47 +39,13 @@ const formTemplate = {
   uf : ""
 }
 
-let addressObj = {
-  bairro: "",
-  cep : "",
-  complemento : "",
-  ddd : "",
-  gia : "",
-  ibge : "",
-  localidade: "",
-  logradouro: "",
-  siafi : "",
-  uf : ""
-}
+let products = []
 
+let slotsAvaiable = []
 
-let products = [
-]
+let hasSelectedProduct = '';
 
-const slotsAvaiable = [
-  {
-    day  : "23-02-2023",
-    hour : "08:00"
-  },
-  {
-    day  : "23-02-2023",
-    hour : "09:00"
-  },
-  {
-    day  : "23-02-2023",
-    hour : "09:30"
-  },
-  {
-    day  : "24-02-2023",
-    hour : "10:30"
-  },
-  {
-    day  : "25-02-2023",
-    hour : "08:30"
-  },
-]
-
-let hasSelectedProduct = ''
+let showErrorModal = false;
 
 const App = () => {
 
@@ -113,7 +81,11 @@ const App = () => {
     else if (currentStep === 3 && data.email && data.name && data.phone) enableButton()
     else if (currentStep === 4 && hasSelectedProduct) enableButton()
     else if (currentStep === 5 && hasSelectedProduct) enableButton()
-    else     disableButton()
+    else disableButton()
+  }
+
+  const hiddenButton = () => {
+    document.querySelector('button')?.classList.add('hidden-button');
   }
 
   const enableButton = () => {
@@ -131,34 +103,64 @@ const App = () => {
                           <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
                           <Products data={data} updateFieldHandler={updateFieldHandler} products={products}/>,
                           <Slots data={data} updateFieldHandler={updateFieldHandler} slotsAvaiable={slotsAvaiable}/>,
-                          <Cep data={data} updateFieldHandler={updateFieldHandler}/>];
+                          <Order data={data}/>];
 
-  const {currentStep,changeStep,currentComponent,isFinalStep} = useChangeStep(formComponents);
+  const {currentStep,changeStep,currentComponent} = useChangeStep(formComponents);
 
   const handleChangeStep = () => {
+    console.log('currentStep',currentStep)
     if(currentStep === 1) {
       getAddressByCep(data.cep).then((resp) => {
-        console.log(resp.data)
-        if(resp.data) {
-          addressObj = resp.data
-
+        console.log('resp',resp.data)
+        if(resp.data && resp.data.cep) {
+          hiddenModal()
           Object.keys(resp.data).forEach(elem => {
             updateFieldHandler(elem,resp.data[elem])
           })
-          changeStep(currentStep+1);
-          disableButton();
+          goToNextStep();
+        } else {
+          displayModalError()
+          console.log('Erro na consulta do CEP')
         }
+      }).catch((error) => {
+        displayModalError()
+        console.log('Erro na consulta do CEP')
       })
+    }
+
+    if(currentStep === 2) {
+      goToNextStep();
     }
     
     if(currentStep === 3) {
       getOffers();
+      goToNextStep();
     }
 
+    if(currentStep === 4) {
+      getSlots();
+      goToNextStep();
+    }
+
+    if(currentStep === 5) {
+      goToNextStep();
+      hiddenButton();
+    }
+  }
+
+  const displayModalError = () => {
+    document.querySelector('#modalId')?.classList.remove('hidden-modal');
+    document.querySelector('#modalId')?.classList.add('display-modal');
+  }
+
+  const hiddenModal = () => {
+    document.querySelector('#modalId')?.classList.add('hidden-modal');
+  }
+
+  const goToNextStep = () => {
     changeStep(currentStep+1);
     disableButton();
     console.log('data>>>',data)
-    
   }
 
   const getOffers = () => {
@@ -191,9 +193,38 @@ const App = () => {
     ]
   }
 
+  const getSlots = () => {
+    slotsAvaiable = [
+      {
+        day  : "23-02-2023",
+        hour : "08:00"
+      },
+      {
+        day  : "23-02-2023",
+        hour : "09:00"
+      },
+      {
+        day  : "23-02-2023",
+        hour : "09:30"
+      },
+      {
+        day  : "24-02-2023",
+        hour : "10:30"
+      },
+      {
+        day  : "25-02-2023",
+        hour : "08:30"
+      },
+    ]
+  }
+
   const getAddressByCep = async (cep) => {
-    const res = await apiCEP.get(cep+"/json");
+    const res = await apiCEP.get(cleanCep(cep)+"/json");
     return await res;
+  }
+
+  const cleanCep = (cep) => {
+    return cep.replace(/\s/g, "");
   }
 
   return (
@@ -205,7 +236,10 @@ const App = () => {
         <Header step = {currentStep}></Header>
         <form className="container-form">
           <div>{currentComponent}</div>
+          <ModalErro></ModalErro>
         </form>
+        
+        
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
       </div>
     </>
