@@ -36,7 +36,8 @@ const formTemplate = {
   localidade: "",
   logradouro: "",
   siafi : "",
-  uf : ""
+  uf : "",
+  addressWithoutComplement : ""
 }
 
 let products = []
@@ -45,7 +46,7 @@ let slotsAvaiable = []
 
 let hasSelectedProduct = '';
 
-let showErrorModal = false;
+let hasComplements = false
 
 const App = () => {
 
@@ -54,6 +55,10 @@ const App = () => {
   const [productCode, setProductCode] = useState({});
 
   const updateFieldHandler = (key,value) => {
+    if(key === "addressWithoutComplement") {
+      handleNoComplements(value)
+    }
+
     if(value?.nativeEvent?.srcElement?.id) {
       handleSelectedProduct(value.nativeEvent.srcElement.id);
       value = value.nativeEvent.srcElement.id;
@@ -67,6 +72,17 @@ const App = () => {
     handleChangeStateButton();
   }
 
+  const handleNoComplements = (checkBoxValue) => {
+    if(checkBoxValue) {
+      document.querySelector('#complemento').classList.add("addres-without-complement");
+      document.querySelector('#complemento').value = ""
+    } else {
+      document.querySelector('#complemento').classList.remove("addres-without-complement")
+    }
+    hasComplements = checkBoxValue;
+
+  }
+
   const handleSelectedProduct = (selectedProduct) => {
     if(selectedProduct !== productCode) {
       document.getElementById(productCode)?.classList.remove("selected-product");
@@ -77,7 +93,7 @@ const App = () => {
 
   const handleChangeStateButton = () => {
     if      (currentStep === 1 && data.cep) enableButton()
-    else if (currentStep === 2 && data.logradouro && data.complemento && data.complemento && data.bairro && data.uf) enableButton()
+    else if (currentStep === 2 && data.logradouro && (data.complemento || hasComplements) && data.bairro && data.uf) enableButton()
     else if (currentStep === 3 && data.email && data.name && data.phone) enableButton()
     else if (currentStep === 4 && hasSelectedProduct) enableButton()
     else if (currentStep === 5 && hasSelectedProduct) enableButton()
@@ -99,7 +115,7 @@ const App = () => {
   }
 
   const formComponents = [<Cep data={data} updateFieldHandler={updateFieldHandler}/>,
-                          <Address data={data} updateFieldHandler={updateFieldHandler}/>,
+                          <Address hasComplements = {hasComplements} data={data} updateFieldHandler={updateFieldHandler}/>,
                           <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
                           <Products data={data} updateFieldHandler={updateFieldHandler} products={products}/>,
                           <Slots data={data} updateFieldHandler={updateFieldHandler} slotsAvaiable={slotsAvaiable}/>,
@@ -238,8 +254,6 @@ const App = () => {
           <div>{currentComponent}</div>
           <ModalErro></ModalErro>
         </form>
-        
-        
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
       </div>
     </>
