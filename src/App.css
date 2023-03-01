@@ -144,7 +144,7 @@
     max-width: 410px;
     min-width: 300px;
     width: 80vw;
-    background-color: white;
+    background-color: rgba(192, 192, 192, 0.815);
     border-radius: 20px;
     padding: 20px;
 }
@@ -190,4 +190,27 @@
 
 .addres-without-complement {
     background-color: silver;
+}
+
+.order-container {
+    background-color: rgba(192, 192, 192, 0.205);
+    border: 2px solid #009E0C;
+    border-radius: 5px;
+    margin: 15px;
+    padding: 10px;
+    width: 85vw;
+    max-width: 400px;
+    min-width: 300px;
+}
+
+.client-info-container {
+    border-bottom: 1px solid #009E0C;
+    padding: 5px;
+    font-size: medium;
+    font-weight: 400;
+}
+
+.client-info-container:hover {
+    background-color: rgba(192, 192, 192, 0.438);
+    font-size: large;
 }
