@@ -21,12 +21,13 @@ const mapOfMonth = new Map([[0,"jan"],
                             [10,"nov"],
                             [11,"dez"]])
 
+
 const Order = ({data}) => {
     return (
         <div className="order-container">
             <div className="client-info-container">
                 <div> Endereço </div>
-                <div> {data.logradouro +" - "+ data.complemento +" - "+ data.localidade +" - "+ data.uf}</div>
+                <div> {data.logradouro +" - "+ formatNumber(data.number) +" - "+ data.localidade +" - "+ data.uf}</div>
             </div>
             <div className="client-info-container"> 
                 <div> Cliente </div>
@@ -41,7 +42,7 @@ const Order = ({data}) => {
             </div>
             <div className="client-info-container">
                 <div> Oferta Selecionada </div>
-                <div> {data.selectedProductCode} </div>
+                <div> {getTextFromSelectedProduct(data.productInfo)} </div>
             </div>
             <div className="client-info-container">
                 <div>Horário de Instalação</div>
@@ -49,6 +50,15 @@ const Order = ({data}) => {
             </div>
         </div>
     )
+}
+
+const formatNumber = (number) => {
+ return number ? number : "S/N"
+}
+
+const getTextFromSelectedProduct = (productInfoStr) => {
+    let productInfoObj = JSON.parse(productInfoStr)
+    return productInfoObj.productName + " - R$" + productInfoObj.price.replace(".",",") + "/mês"
 }
 
 const getFullTextDate = (dateStr) => {

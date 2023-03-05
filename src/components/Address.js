@@ -1,11 +1,11 @@
 import React from "react";
 
-const Address = ({data,updateFieldHandler,hasComplements}) => {
+const Address = ({data,updateFieldHandler,hasNumber}) => {
    return (
     <div className="address-container">
         <div className="title-input">Rua</div>
         <input className="general-input"
-            onChange={(e) => updateFieldHandler("logradouro",e.target.value)}
+            onChange={(e) => updateFieldHandler("objLodragouro.logradouro",e.target.value)}
             value = {data.logradouro}
         ></input>
         <div className="title-input">Bairro</div>
@@ -13,16 +13,16 @@ const Address = ({data,updateFieldHandler,hasComplements}) => {
             onChange={(e) => updateFieldHandler("bairro",e.target.value)}
             value = {data.bairro}
         ></input>
-        <div className="title-input">Complemento</div>
-        <input disabled = {hasComplements} id = "complemento"className="general-input"
-            onChange={(e) => updateFieldHandler("complemento",e.target.value)}
-            value = {data.complemento}
+        <div className="title-input">Número</div>
+        <input disabled = {hasNumber} id = "number"className="general-input"
+            onChange={(e) => updateFieldHandler("numero",e.target.value)}
+            value = {data.numero}
         ></input>
         <div className="checkbox-container">
             <input type="checkbox"
-                onChange={(e) => updateFieldHandler("addressWithoutComplement",e.target.checked)}
+                onChange={(e) => updateFieldHandler("addressWithoutNumber",e.target.checked)}
             ></input>
-            <div className="title-input">Endereço sem complemento</div>
+            <div className="title-input">Endereço sem número</div>
         </div>   
         <div className="title-input">Cidade</div>
         <input className="general-input"

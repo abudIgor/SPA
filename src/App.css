@@ -4,7 +4,6 @@
     margin:  30px auto;
     overflow: auto;
     min-height: 300px;
-    /* border: 2px solid #00AB0F; */
     padding: 10px 5px 5px 5px;
     border-radius: 10px;
     display: flex;
@@ -45,8 +44,6 @@
     display: none;
 }
 
-
-
 .container-button {
     width: 95vw;
     display: flex;
@@ -55,6 +52,7 @@
     margin-top: 60 px;
     min-width: 360px;
 }
+
 .title {
     padding: 0px 0px 0px 55px;
     display: flex;
@@ -75,7 +73,7 @@
     border-radius: 5px;
     border-width: 1px;
     border-color: rgba(128, 128, 128, 0.74);
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 20px;
     width: 60vw;
     min-width: 200px;
@@ -123,13 +121,13 @@
 
 .product-container:hover {
     background-color: #009E0C;
-    transition: 1s width;
+    /* transition: 1s width; */
 }
 
 .selected-product {
     background-color: #009E0C;
     border: 2px solid silver;
-    width: 85vw;
+    /* width: 85vw; */
 }
 
 .modal {
@@ -139,12 +137,11 @@
     margin-right: auto;
     margin-left: 0%;
     display: none;
-    border: 2px solid #009E0C;
     height: 200px;
     max-width: 410px;
     min-width: 300px;
     width: 80vw;
-    background-color: rgba(192, 192, 192, 0.815);
+    background-color: rgba(192, 192, 192, 0.9);
     border-radius: 20px;
     padding: 20px;
 }
@@ -199,7 +196,6 @@
     margin: 15px;
     padding: 10px;
     width: 85vw;
-    max-width: 400px;
     min-width: 300px;
 }
 
@@ -213,4 +209,12 @@
 .client-info-container:hover {
     background-color: rgba(192, 192, 192, 0.438);
     font-size: large;
+    border-radius: 10px;
+}
+
+.no-slots {
+    border: 2px solid rgba(192, 192, 192, 0.89);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgba(192, 192, 192, 0.438);
 }

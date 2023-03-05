@@ -1,6 +1,6 @@
 import React from "react";
 
-const PersonalData = ({data, updateFieldHandler}) => {
+const LeadData = ({data, updateFieldHandler}) => {
 
     return (
         <div className="address-container">
@@ -10,6 +10,7 @@ const PersonalData = ({data, updateFieldHandler}) => {
             ></input>
             <div className="title-input">Telefone</div>
             <input className="general-input"
+                onKeyPress={(e) => checkNumber(e)}
                 onChange={(e) => updateFieldHandler("phone",e.target.value)}
             ></input>
 
@@ -21,4 +22,11 @@ const PersonalData = ({data, updateFieldHandler}) => {
     );
 }
 
-export default PersonalData;
+const checkNumber = (e) => {
+    if(isNaN(e.key)) {
+        e.preventDefault();
+    }
+}
+
+
+export default LeadData;

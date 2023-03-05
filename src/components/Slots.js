@@ -21,18 +21,30 @@ const mapOfMonth = new Map([[0,"jan"],
                             [11,"dez"]])
 
 const Slots = ({data,updateFieldHandler,slotsAvaiable}) => {
-    return (
-        <div>
-            <div className="products-container">
-                {slotsAvaiable.map(slot => (
-                    <div className="product-container" key={slot.day+slot.hour} id={slot.day+slot.hour} onClick={(e) => updateFieldHandler("selectedSlot",e)}>
-                        <div>{getFullTextDate(slot.day)}</div>
-                        <div>{slot.hour}</div>
-                    </div>
-                ))}
+    if(slotsAvaiable && slotsAvaiable.length) {
+        return (
+            <div>
+                <div className="products-container">
+                    {slotsAvaiable.map(slot => (
+                        <div className="product-container" key={slot.day+slot.hour} id={slot.day+slot.hour} onClick={(e) => updateFieldHandler("selectedSlot",e)}>
+                            <div>{getFullTextDate(slot.day)}</div>
+                            <div>{slot.hour}</div>
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
-    )
+        )
+    } else {
+        return (
+            <div className="products-container">
+                <div className="no-slots">
+                    Não encontramos horários disponíveis para a visita do técnico, mas fique tranquilo,
+                    seguiremos com sua compra e entraremos em contato em até 10 dias para agendarmos
+                    uma data de instalação.
+                </div>
+            </div>
+        )
+    }
 }
 
 const getFullTextDate = (dateStr) => {

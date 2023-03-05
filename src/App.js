@@ -7,12 +7,13 @@ import apiCEP from "./api/apiCEP";
 import Header from "./components/Header";
 import NextButton from "./components/NextButton";
 import Cep from "./components/Cep";
-import PersonalData from "./components/PersonalData";
+import LeadData from "./components/LeadData";
 import Products from "./components/Products";
 import Slots from "./components/Slots";
 import Address from "./components/Address";
 import Order from "./components/Order";
 import ModalErro from "./components/ModalErro";
+import PersonalData from "./components/PersonsalData";
 
 /*Import Css*/
 import './App.css';
@@ -27,9 +28,10 @@ const formTemplate = {
   phone: "",
   cep : "",
   selectedProductCode : "",
+  productInfo : "",
   selectedSlot: "",
   bairro: "",
-  complemento : "",
+  numero : "",
   ddd : "",
   gia : "",
   ibge : "",
@@ -37,7 +39,8 @@ const formTemplate = {
   logradouro: "",
   siafi : "",
   uf : "",
-  addressWithoutComplement : ""
+  addressWithoutNumber : "",
+  cpf : ""
 }
 
 let products = []
@@ -46,23 +49,26 @@ let slotsAvaiable = []
 
 let hasSelectedProduct = '';
 
-let hasComplements = false
+let hasNumber = false;
 
 const App = () => {
 
   const [buttonState, setButtonState] = useState(true);
   const [data, setData] = useState(formTemplate);
-  const [productCode, setProductCode] = useState({});
+  const [productCode, setProductCode] = useState('');
 
   const updateFieldHandler = (key,value) => {
-    if(key === "addressWithoutComplement") {
-      handleNoComplements(value)
+    if(key === "addressWithoutNumber") {
+      handleNoNumber(value)
     }
 
     if(value?.nativeEvent?.srcElement?.id) {
       handleSelectedProduct(value.nativeEvent.srcElement.id);
       value = value.nativeEvent.srcElement.id;
       hasSelectedProduct = value
+      if(key === 'selectedProductCode') {
+        saveProductInfo(value)
+      }
     }
 
     setData((prev) => {
@@ -72,31 +78,42 @@ const App = () => {
     handleChangeStateButton();
   }
 
-  const handleNoComplements = (checkBoxValue) => {
-    if(checkBoxValue) {
-      document.querySelector('#complemento').classList.add("addres-without-complement");
-      document.querySelector('#complemento').value = ""
-    } else {
-      document.querySelector('#complemento').classList.remove("addres-without-complement")
-    }
-    hasComplements = checkBoxValue;
+  const saveProductInfo = (productCode) => {
+    let productsCopy = JSON.parse(JSON.stringify(products))
+    let productSelected = productsCopy.find(elem=> elem.productCode === productCode);
+    setData((prev) => {
+      return {...prev, productInfo: JSON.stringify(productSelected)};
+    })
+  }
 
+  const handleNoNumber = (checkBoxValue) => {
+    if(checkBoxValue) {
+      document.querySelector('#number').classList.add("addres-without-number");
+      document.querySelector('#number').value = ""
+    } else {
+      document.querySelector('#number').classList.remove("addres-without-number")
+    }
+    hasNumber = checkBoxValue;
+    setData((prev) => {
+      return {...prev, number: 'S/N'};
+    })
   }
 
   const handleSelectedProduct = (selectedProduct) => {
-    if(selectedProduct !== productCode) {
-      document.getElementById(productCode)?.classList.remove("selected-product");
-      setProductCode(selectedProduct);
-      document.getElementById(selectedProduct).classList.add("selected-product");
-    }
+    console.log('selectedProduct ->',selectedProduct)
+    console.log('productCode ->',productCode)
+    document.getElementById(productCode)?.classList.remove("selected-product");
+    setProductCode(selectedProduct);
+    document.getElementById(selectedProduct).classList.add("selected-product");
   }
 
   const handleChangeStateButton = () => {
     if      (currentStep === 1 && data.cep) enableButton()
-    else if (currentStep === 2 && data.logradouro && (data.complemento || hasComplements) && data.bairro && data.uf) enableButton()
+    else if (currentStep === 2 && data.logradouro && (data.numero || hasNumber) && data.bairro && data.uf) enableButton()
     else if (currentStep === 3 && data.email && data.name && data.phone) enableButton()
     else if (currentStep === 4 && hasSelectedProduct) enableButton()
-    else if (currentStep === 5 && hasSelectedProduct) enableButton()
+    else if (currentStep === 5 && data.cpf) enableButton()
+    else if (currentStep === 6 && hasSelectedProduct) enableButton()
     else disableButton()
   }
 
@@ -115,32 +132,35 @@ const App = () => {
   }
 
   const formComponents = [<Cep data={data} updateFieldHandler={updateFieldHandler}/>,
-                          <Address hasComplements = {hasComplements} data={data} updateFieldHandler={updateFieldHandler}/>,
-                          <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
+                          <Address hasNumber = {hasNumber} data={data} updateFieldHandler={updateFieldHandler}/>,
+                          <LeadData data={data} updateFieldHandler={updateFieldHandler}/>,
                           <Products data={data} updateFieldHandler={updateFieldHandler} products={products}/>,
+                          <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
                           <Slots data={data} updateFieldHandler={updateFieldHandler} slotsAvaiable={slotsAvaiable}/>,
                           <Order data={data}/>];
 
   const {currentStep,changeStep,currentComponent} = useChangeStep(formComponents);
 
   const handleChangeStep = () => {
-    console.log('currentStep',currentStep)
+
     if(currentStep === 1) {
       getAddressByCep(data.cep).then((resp) => {
         console.log('resp',resp.data)
         if(resp.data && resp.data.cep) {
           hiddenModal()
           Object.keys(resp.data).forEach(elem => {
-            updateFieldHandler(elem,resp.data[elem])
-          })
+            if(elem === "complemento") {
+              updateFieldHandler("numero",resp.data[elem])
+            } else {
+              updateFieldHandler(elem,resp.data[elem])
+            }
+          }) 
           goToNextStep();
         } else {
           displayModalError()
-          console.log('Erro na consulta do CEP')
         }
       }).catch((error) => {
         displayModalError()
-        console.log('Erro na consulta do CEP')
       })
     }
 
@@ -149,18 +169,28 @@ const App = () => {
     }
     
     if(currentStep === 3) {
+      //TODO Save lead information
       getOffers();
       goToNextStep();
     }
 
     if(currentStep === 4) {
-      getSlots();
       goToNextStep();
     }
 
     if(currentStep === 5) {
+      //Save Contact Information
+      getSlots();
+      goToNextStep();
+    }
+
+    if(currentStep === 6) {
       goToNextStep();
       hiddenButton();
+    }
+
+    if(currentStep === 7) {
+      goToNextStep();
     }
   }
 
@@ -175,7 +205,12 @@ const App = () => {
 
   const goToNextStep = () => {
     changeStep(currentStep+1);
-    disableButton();
+    console.log('currentStep',currentStep)
+    if(currentStep === 5 && slotsAvaiable.length === 0) {
+      enableButton()
+    } else {
+      disableButton();
+    }
     console.log('data>>>',data)
   }
 
@@ -210,6 +245,7 @@ const App = () => {
   }
 
   const getSlots = () => {
+    if(parseInt(Math.random() * 3) === 0) return;
     slotsAvaiable = [
       {
         day  : "23-02-2023",

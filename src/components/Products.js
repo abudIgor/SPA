@@ -1,6 +1,7 @@
 import React from "react";
 
 const Products = ({data, updateFieldHandler, products}) => {
+    console.log('products',products)
     return(
         <div>
             <div className="products-container">

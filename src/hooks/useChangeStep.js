@@ -5,7 +5,7 @@ export function useChangeStep(steps) {
     const [currentStep, setCurrentStep] = useState(1);
 
     function changeStep(index) {
-        if(index <=6) {
+        if(index <=7) {
             setCurrentStep(index);  
         }
     }
