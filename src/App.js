@@ -14,6 +14,7 @@ import Address from "./components/Address";
 import Order from "./components/Order";
 import ModalErro from "./components/ModalErro";
 import PersonalData from "./components/PersonsalData";
+import Payment from "./components/Payment";
 
 /*Import Css*/
 import './App.css';
@@ -40,7 +41,9 @@ const formTemplate = {
   siafi : "",
   uf : "",
   addressWithoutNumber : "",
-  cpf : ""
+  cpf : "",
+  paymentType : "BoletoBancario",
+  dueDate: "",
 }
 
 let products = []
@@ -100,8 +103,6 @@ const App = () => {
   }
 
   const handleSelectedProduct = (selectedProduct) => {
-    console.log('selectedProduct ->',selectedProduct)
-    console.log('productCode ->',productCode)
     document.getElementById(productCode)?.classList.remove("selected-product");
     setProductCode(selectedProduct);
     document.getElementById(selectedProduct).classList.add("selected-product");
@@ -114,6 +115,7 @@ const App = () => {
     else if (currentStep === 4 && hasSelectedProduct) enableButton()
     else if (currentStep === 5 && data.cpf) enableButton()
     else if (currentStep === 6 && hasSelectedProduct) enableButton()
+    else if (currentStep === 7 && data.dueDate && data.paymentType) enableButton()
     else disableButton()
   }
 
@@ -137,6 +139,7 @@ const App = () => {
                           <Products data={data} updateFieldHandler={updateFieldHandler} products={products}/>,
                           <PersonalData data={data} updateFieldHandler={updateFieldHandler}/>,
                           <Slots data={data} updateFieldHandler={updateFieldHandler} slotsAvaiable={slotsAvaiable}/>,
+                          <Payment data={data} updateFieldHandler={updateFieldHandler}/>,
                           <Order data={data}/>];
 
   const {currentStep,changeStep,currentComponent} = useChangeStep(formComponents);
@@ -186,10 +189,14 @@ const App = () => {
 
     if(currentStep === 6) {
       goToNextStep();
-      hiddenButton();
     }
 
     if(currentStep === 7) {
+      goToNextStep();
+      hiddenButton();
+    }
+
+    if(currentStep === 8) {
       goToNextStep();
     }
   }
@@ -205,7 +212,6 @@ const App = () => {
 
   const goToNextStep = () => {
     changeStep(currentStep+1);
-    console.log('currentStep',currentStep)
     if(currentStep === 5 && slotsAvaiable.length === 0) {
       enableButton()
     } else {

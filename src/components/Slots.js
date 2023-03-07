@@ -37,7 +37,7 @@ const Slots = ({data,updateFieldHandler,slotsAvaiable}) => {
     } else {
         return (
             <div className="products-container">
-                <div className="no-slots">
+                <div className="info-container">
                     Não encontramos horários disponíveis para a visita do técnico, mas fique tranquilo,
                     seguiremos com sua compra e entraremos em contato em até 10 dias para agendarmos
                     uma data de instalação.

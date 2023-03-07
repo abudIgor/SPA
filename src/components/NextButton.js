@@ -8,7 +8,8 @@ const NextButton = ({children,onClick,isDisabled}) => {
                                        [3,"Avançar"],
                                        [4,"Avançar"],
                                        [5,"Avançar"],
-                                       [6,"Avançar"]]);
+                                       [6,"Avançar"],
+                                       [7,"Avançar"]]);
     
     return (
         <div className="container-button">

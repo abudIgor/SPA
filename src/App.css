@@ -1,7 +1,7 @@
 .container {
     width: 95vw;
     min-width: 360px;
-    margin:  30px auto;
+    margin:  15px auto;
     overflow: auto;
     min-height: 300px;
     padding: 10px 5px 5px 5px;
@@ -14,7 +14,14 @@
     color:black;
     border-bottom: 2px solid #00AB0F;
     padding-bottom: 15px;
+    font-size: larger;
     font-weight: 600;
+}
+
+.subtitle-step {
+    padding-top: 10px;
+    font-weight: 500;
+    font-size: medium;
 }
 
 .button {
@@ -212,9 +219,12 @@
     border-radius: 10px;
 }
 
-.no-slots {
+.info-container {
     border: 2px solid rgba(192, 192, 192, 0.89);
     border-radius: 10px;
     padding: 10px;
     background-color: rgba(192, 192, 192, 0.438);
+    margin-bottom: 15px;
+    margin-top: 15px;
+    max-width: 380px;
 }

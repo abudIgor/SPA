@@ -8,7 +8,8 @@ const Header = (props) => {
                               [4,"ESCOLHA UMA OFERTA DISPONÍVEL"],
                               [5,"VAMOS PRECISAR DE MAIS ALGUMAS INFORMAÇÕES"],
                               [6,"INSTALAÇÃO"],
-                              [7,"PARABÉNS, VOCÊ AGORA É UM CLIENTE DO PROGRAMAFIBRA"]])
+                              [7,"PAGAMENTO"],
+                              [8,"PARABÉNS, VOCÊ AGORA É UM CLIENTE DO PROGRAMAFIBRA"]])
     
     const stepSubtitle = new Map([[1,""],
                                 [2,""],
@@ -16,14 +17,15 @@ const Header = (props) => {
                                 [4,""],
                                 [5,""],
                                 [6,""],
-                                [7,"Confira aqui o resumo de sua compra"]])
+                                [7,"Escolhe um método de pagamento"],
+                                [8,"Confira aqui o resumo de sua compra"]])
 
     return (
         <>
             <div className="title-step">
                 {stepTile.get(props.step)}
             </div>
-            <div>
+            <div className="subtitle-step">
                 {stepSubtitle.get(props.step)}
             </div>
         </>
