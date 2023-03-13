@@ -45,8 +45,12 @@ const Order = ({data}) => {
                 <div> {getTextFromSelectedProduct(data.productInfo)} </div>
             </div>
             <div className="client-info-container">
-                <div>Horário de Instalação</div>
+                <div>Data de Instalação</div>
                 <div>{getFullTextDate(data.selectedSlot.slice(0,10)) + " às " + data.selectedSlot.slice(10,15)}</div>
+            </div>
+            <div className="client-info-container">
+                <div>Forma de Pagamento</div>
+                <div>{data.paymentType + " - " + "Vencimento em todo dia " + data.dueDate}</div>
             </div>
         </div>
     )
