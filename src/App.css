@@ -228,3 +228,19 @@
     margin-top: 15px;
     max-width: 380px;
 }
+
+.wpp-image {
+    background-image: url("./imgs/wppImage.png");
+    width: 45px;
+    height: 45px;
+    background-repeat: round;
+    border-radius: 25px
+}
+
+.icon-container {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}

@@ -300,6 +300,10 @@ const App = () => {
     return cep.replace(/\s/g, "");
   }
 
+  const goToWpp = () => {
+    window.open("https://wa.me/5532991488518", "_blank");
+  }
+
   return (
     <>
       <div className="title">
@@ -312,6 +316,10 @@ const App = () => {
           <ModalErro></ModalErro>
         </form>
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
+      </div>
+      <div className="icon-container">
+        <div className="wpp-image" onClick={goToWpp}>
+        </div>
       </div>
     </>
   )
