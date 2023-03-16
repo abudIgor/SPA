@@ -18,6 +18,12 @@ const LeadData = ({data, updateFieldHandler}) => {
             <input className="general-input"
                 onChange={(e) => updateFieldHandler("email",e.target.value)}
             ></input>
+            <div className="checkbox-container">
+                <input type="checkbox"
+                    onChange={(e) => updateFieldHandler("agreementSharingData",e.target.checked)}
+                ></input>
+                <div className="title-input-small"> Concordo com os termos e políticas de compartilhamento de dados</div>
+            </div>
         </div>
     );
 }

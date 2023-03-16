@@ -92,6 +92,13 @@
     font-weight: 400;
 }
 
+.title-input-small {
+    font-weight: 300;
+    min-width: 200px;
+    max-width: 390px;
+    margin-left: 10px;
+}
+
 .address-container {
     padding-top: 30px;
 }
@@ -140,7 +147,7 @@
 .modal {
     display: flex;
     position: fixed;
-    top: 240px;
+    top: 170px;
     margin-right: auto;
     margin-left: 0%;
     display: none;

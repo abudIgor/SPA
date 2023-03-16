@@ -44,6 +44,7 @@ const formTemplate = {
   cpf : "",
   paymentType : "BoletoBancario",
   dueDate: "",
+  agreementSharingData: "",
 }
 
 let products = []
@@ -59,6 +60,7 @@ let paymentInfo = {
   dueDate : "",
 }
 
+let agreementShareData = false;
 
 const App = () => {
 
@@ -69,6 +71,10 @@ const App = () => {
   const updateFieldHandler = (key,value) => {
     if(key === "addressWithoutNumber") {
       handleNoNumber(value)
+    }
+
+    if(key === "agreementSharingData") {
+      agreementShareData = value;
     }
 
     if(key === "paymentType") {
@@ -126,7 +132,7 @@ const App = () => {
     console.log(paymentInfo)
     if      (currentStep === 1 && data.cep) enableButton()
     else if (currentStep === 2 && data.logradouro && (data.numero || hasNumber) && data.bairro && data.uf) enableButton()
-    else if (currentStep === 3 && data.email && data.name && data.phone) enableButton()
+    else if (currentStep === 3 && data.email && data.name && data.phone && agreementShareData) enableButton()
     else if (currentStep === 4 && hasSelectedProduct) enableButton()
     else if (currentStep === 5 && data.cpf) enableButton()
     else if (currentStep === 6 && hasSelectedProduct) enableButton()

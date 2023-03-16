@@ -46,7 +46,7 @@ const Order = ({data}) => {
             </div>
             <div className="client-info-container">
                 <div>Data de Instalação</div>
-                <div>{getFullTextDate(data.selectedSlot.slice(0,10)) + " às " + data.selectedSlot.slice(10,15)}</div>
+                <div>{getFullTextDate(data.selectedSlot.slice(0,10), data.selectedSlot.slice(10,15))}</div>
             </div>
             <div className="client-info-container">
                 <div>Forma de Pagamento</div>
@@ -65,15 +65,20 @@ const getTextFromSelectedProduct = (productInfoStr) => {
     return productInfoObj.productName + " - R$" + productInfoObj.price.replace(".",",") + "/mês"
 }
 
-const getFullTextDate = (dateStr) => {
-    let splittedData = dateStr.split("-")
-    let date =  new Date(splittedData[2]+"-"+splittedData[1]+"-"+splittedData[0]);
-    let day = splittedData[0];
-    let month = mapOfMonth.get(date.getMonth());
-    let weekDay = mapOfDays.get(date.getDay());
-    let year = splittedData[2];
+const getFullTextDate = (dateStr, timeStr) => {
+    if(dateStr) {
 
-   return (day + " " + month + "/" + year + " (" + weekDay + ")")
+        let splittedData = dateStr.split("-")
+        let date =  new Date(splittedData[2]+"-"+splittedData[1]+"-"+splittedData[0]);
+        let day = splittedData[0];
+        let month = mapOfMonth.get(date.getMonth());
+        let weekDay = mapOfDays.get(date.getDay());
+        let year = splittedData[2];
+        
+       return (day + " " + month + "/" + year + " (" + weekDay + ")" + " às " + timeStr);
+    } else {
+        return 'Não foram encontrados horários disponíveis para o seu endereço. Entraremos em contato em até 10 dias utéis para realizar a instalação.'
+    }
 }
 
 export default Order;
