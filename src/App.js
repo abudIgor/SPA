@@ -2,6 +2,7 @@ import React, {useState } from "react";
 
 /*Import APIs*/
 import apiCEP from "./api/apiCEP";
+import apiLead from "./api/apiLead";
 
 /*Import React Components*/
 import Header from "./components/Header";
@@ -193,7 +194,10 @@ const App = () => {
     }
     
     if(currentStep === 3) {
-      //TODO Save lead information
+     
+      createLead().then((resp) => {
+        console.log(resp)
+      });
       getOffers();
       goToNextStep();
     }
@@ -239,6 +243,16 @@ const App = () => {
       disableButton();
     }
     console.log('data>>>',data)
+  }
+
+  const createLead = async () => {
+    const lead = {
+      name  : data.name,
+      phone : data.phone,
+      email : data.email
+    }
+    const res = await apiLead.post('/lead',lead);
+    return await res;
   }
 
   const getOffers = () => {
@@ -324,7 +338,7 @@ const App = () => {
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
       </div>
       <div className="icon-container">
-        <div className="wpp-image" onClick={goToWpp}>
+        <div className="wpp-image" onClick={goToWpp} data-hover="Dúvidas? Entre em contato!">
         </div>
       </div>
     </>
