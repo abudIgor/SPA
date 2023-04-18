@@ -16,6 +16,7 @@ import Order from "./components/Order";
 import ModalErro from "./components/ModalErro";
 import PersonalData from "./components/PersonsalData";
 import Payment from "./components/Payment";
+import LoadingSpinner from "./components/Spinner";
 
 /*Import Css*/
 import './App.css';
@@ -68,6 +69,7 @@ const App = () => {
   const [buttonState, setButtonState] = useState(true);
   const [data, setData] = useState(formTemplate);
   const [productCode, setProductCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateFieldHandler = (key,value) => {
     if(key === "addressWithoutNumber") {
@@ -170,6 +172,7 @@ const App = () => {
 
     if(currentStep === 1) {
       getAddressByCep(data.cep).then((resp) => {
+        setIsLoading(false)
         console.log('resp',resp.data)
         if(resp.data && resp.data.cep) {
           hiddenModal()
@@ -196,10 +199,11 @@ const App = () => {
     if(currentStep === 3) {
      
       createLead().then((resp) => {
+        setIsLoading(false)
         console.log(resp)
+        getOffers();
+        goToNextStep();
       });
-      getOffers();
-      goToNextStep();
     }
 
     if(currentStep === 4) {
@@ -246,6 +250,7 @@ const App = () => {
   }
 
   const createLead = async () => {
+    setIsLoading(true)
     const lead = {
       name  : data.name,
       phone : data.phone,
@@ -312,6 +317,7 @@ const App = () => {
   }
 
   const getAddressByCep = async (cep) => {
+    setIsLoading(true)
     const res = await apiCEP.get(cleanCep(cep)+"/json");
     return await res;
   }
@@ -332,6 +338,7 @@ const App = () => {
       <div className = "container">
         <Header step = {currentStep}></Header>
         <form className="container-form">
+          {isLoading ? <LoadingSpinner /> : ''}
           <div>{currentComponent}</div>
           <ModalErro></ModalErro>
         </form>

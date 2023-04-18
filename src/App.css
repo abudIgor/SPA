@@ -268,9 +268,9 @@
     align-items: center;
     padding: 10px;
     cursor: pointer;
-  }
+}
   
-  .wpp-image:before {
+.wpp-image:before {
     content: attr(data-hover);
     visibility: hidden;
     opacity: 0;
@@ -286,8 +286,30 @@
     z-index: 1;
     left: -148px;
     top: -16%;
-  }
-  .wpp-image:hover:before {
-    opacity: 1;
-    visibility: visible;
-  }
+}
+
+.wpp-image:hover:before {
+opacity: 1;
+visibility: visible;
+}
+
+@keyframes spinner {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+}
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 10px solid #f3f3f3; /* Light grey */
+    border-top: 10px solid #009E0C; /* Black */
+    border-radius: 50%;
+    animation: spinner 1.5s linear infinite;
+}
+.spinner-container {
+    z-index: 1;
+    position: fixed;
+}
