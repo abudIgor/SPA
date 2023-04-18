@@ -25,7 +25,6 @@
 }
 
 .button {
-    /* background-color:  #00AB0F; */
     border-radius: 25px;
     width: 150px;
     height: 35px;
@@ -135,13 +134,11 @@
 
 .product-container:hover {
     background-color: #009E0C;
-    /* transition: 1s width; */
 }
 
 .selected-product {
     background-color: #009E0C;
     border: 2px solid silver;
-    /* width: 85vw; */
 }
 
 .modal {
