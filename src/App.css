@@ -239,14 +239,6 @@
     width: 55vw
 }
 
-/* .wpp-image {
-    background-image: url("./imgs/wppImage.png");
-    width: 45px;
-    height: 45px;
-    background-repeat: round;
-    border-radius: 25px
-} */
-
 .icon-container {
     display: flex;
     justify-content: end;
