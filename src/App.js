@@ -172,9 +172,9 @@ const App = () => {
 
     if(currentStep === 1) {
       getAddressByCep(data.cep).then((resp) => {
-        setIsLoading(false)
         console.log('resp',resp.data)
         if(resp.data && resp.data.cep) {
+          setIsLoading(false)
           hiddenModal()
           Object.keys(resp.data).forEach(elem => {
             if(elem === "complemento") {
@@ -186,8 +186,10 @@ const App = () => {
           goToNextStep();
         } else {
           displayModalError()
+          setIsLoading(false)
         }
       }).catch((error) => {
+        setIsLoading(false)
         displayModalError()
       })
     }
@@ -332,13 +334,13 @@ const App = () => {
 
   return (
     <>
+      {isLoading ? <LoadingSpinner /> : <div></div>}
       <div className="title">
         <h2 className="green-text">PROGRAMA</h2><h2 className="simple-text">FIBRA</h2>
       </div>
       <div className = "container">
         <Header step = {currentStep}></Header>
         <form className="container-form">
-          {isLoading ? <LoadingSpinner /> : ''}
           <div>{currentComponent}</div>
           <ModalErro></ModalErro>
         </form>

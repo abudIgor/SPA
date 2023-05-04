@@ -4,7 +4,7 @@ import "../App.css"
 const NextButton = ({children,onClick,isDisabled}) => {
 
     const mapButtonMessage = new Map ([[1,"Consultar Endereço"],
-                                       [2,"Inserir Dados"],
+                                       [2,"Confirmar Endereço"],
                                        [3,"Avançar"],
                                        [4,"Avançar"],
                                        [5,"Avançar"],
