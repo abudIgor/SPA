@@ -199,12 +199,18 @@ const App = () => {
     }
     
     if(currentStep === 3) {
-     
-      createLead().then((resp) => {
-        setIsLoading(false)
-        console.log(resp)
-        getOffers();
-        goToNextStep();
+       getLeadByPhone().then((resp) => {
+          if(resp.data.length) {
+            displayModalError()
+            setIsLoading(false)
+          } else {
+            createLead().then((resp) => {
+              setIsLoading(false)
+              console.log(resp)
+              getOffers();
+              goToNextStep();
+            });
+          }
       });
     }
 
@@ -259,6 +265,12 @@ const App = () => {
       email : data.email
     }
     const res = await apiLead.post('/lead',lead);
+    return await res;
+  }
+
+  const getLeadByPhone = async () => {
+    setIsLoading(true)
+    const res = await apiLead.get('/lead/users/'+data.phone);
     return await res;
   }
 
@@ -342,7 +354,7 @@ const App = () => {
         <Header step = {currentStep}></Header>
         <form className="container-form">
           <div>{currentComponent}</div>
-          <ModalErro></ModalErro>
+          <ModalErro step = {currentStep}></ModalErro>
         </form>
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
       </div>

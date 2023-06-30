@@ -1,13 +1,16 @@
 import React from "react"; 
 
-const ModalErro = () => {
+const ModalErro = (props) => {
+    const errorMsg = new Map([[1,"Não foi possível consultar o CEP desejado. Tente novamente."],
+                              [3,"Verifique o número do Telefone e tente novamente."]])
+
     return (
         <div id="modalId" className="modal">
             <div className="close-icon-container">
                 <div className="close-icon" onClick={() => closeModal()}>X</div>
             </div>
             <div className="container-error-text">
-                Não foi possível realizar a consulta para o seu CEP. Verifique o valor inserido e tente novamente.
+                {errorMsg.get(props.step)}
             </div>
         </div>
     )
