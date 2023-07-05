@@ -216,9 +216,11 @@ const App = () => {
       
       getLeadByPhone().then((resp) => {
           if(resp.data.length) {
-            setMsgError('Verifique o número do Telefone e tente novamente.')
-            displayModalError()
-            setIsLoading(false)
+            updateLead(resp.data[0]._id).then((resp) => {
+              setIsLoading(false)
+              setMsgError('Seus dados de contatos foram atualizados com sucesso.')
+              displayModalError()
+            })
           } else {
             createLead().then((resp) => {
               setIsLoading(false)
@@ -281,6 +283,17 @@ const App = () => {
       email : data.email
     }
     const res = await apiLead.post('/lead',lead);
+    return await res;
+  }
+
+  const updateLead = async (leadId) => {
+    setIsLoading(true)
+    const lead = {
+      name  : data.name,
+      phone : data.phone,
+      email : data.email,
+    }
+    const res = await apiLead.put('/lead/'+leadId,lead);
     return await res;
   }
 
