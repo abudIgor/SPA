@@ -66,6 +66,7 @@ let agreementShareData = false;
 
 const App = () => {
 
+  const [msgError, setMsgError] = useState('');
   const [buttonState, setButtonState] = useState(true);
   const [data, setData] = useState(formTemplate);
   const [productCode, setProductCode] = useState('');
@@ -185,10 +186,12 @@ const App = () => {
           }) 
           goToNextStep();
         } else {
+          setMsgError('Não foi possível consultar o CEP desejado. Tente novamente.')
           displayModalError()
           setIsLoading(false)
         }
       }).catch((error) => {
+        setMsgError('Não foi possível consultar o CEP desejado. Tente novamente.')
         setIsLoading(false)
         displayModalError()
       })
@@ -199,8 +202,21 @@ const App = () => {
     }
     
     if(currentStep === 3) {
-       getLeadByPhone().then((resp) => {
+      if(!checkRegexPhone()) {
+        setMsgError('Verifique o número do Telefone e tente novamente.')
+        displayModalError()
+        return 
+      }
+
+      if(!checkRegexName()) {
+        setMsgError('Verifique o Nome Completo e tente novamente.')
+        displayModalError()
+        return 
+      }
+      
+      getLeadByPhone().then((resp) => {
           if(resp.data.length) {
+            setMsgError('Verifique o número do Telefone e tente novamente.')
             displayModalError()
             setIsLoading(false)
           } else {
@@ -272,6 +288,17 @@ const App = () => {
     setIsLoading(true)
     const res = await apiLead.get('/lead/users/'+data.phone);
     return await res;
+  }
+
+  const checkRegexPhone = () =>{
+    var regexNumeros = /^[0-9]+$/;
+    var regexTamanho = /^.{11}$/;
+    return (regexNumeros.test(data.phone) && regexTamanho.test(data.phone))
+  }
+
+  const checkRegexName = () => {
+    var regexDuasPalavras = /^\S+\s+\S+$/;
+    return regexDuasPalavras.test(data.name)
   }
 
   const getOffers = () => {
@@ -354,7 +381,7 @@ const App = () => {
         <Header step = {currentStep}></Header>
         <form className="container-form">
           <div>{currentComponent}</div>
-          <ModalErro step = {currentStep}></ModalErro>
+          <ModalErro msg = {msgError}></ModalErro>
         </form>
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
       </div>
