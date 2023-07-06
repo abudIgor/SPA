@@ -23,6 +23,7 @@ import './App.css';
 
 /*Import Hooks*/
 import {useChangeStep} from "./hooks/useChangeStep";
+import ModalExistingLead from "./components/ModalExistingLead";
 
 
 const formTemplate = {
@@ -217,9 +218,12 @@ const App = () => {
       getLeadByPhone().then((resp) => {
           if(resp.data.length) {
             updateLead(resp.data[0]._id).then((resp) => {
-              setIsLoading(false)
-              setMsgError('Seus dados de contatos foram atualizados com sucesso.')
-              displayModalError()
+              setIsLoading(false);
+              showExistingLeadModal();
+              getOffers();
+              setTimeout(() => {
+                goToNextStep()
+              },2000)
             })
           } else {
             createLead().then((resp) => {
@@ -261,8 +265,17 @@ const App = () => {
     document.querySelector('#modalId')?.classList.add('display-modal');
   }
 
+  const showExistingLeadModal = () => {
+    document.querySelector('#modalIdLead')?.classList.add('display-modal');
+    document.querySelector('#modalIdLead')?.classList.remove('hidden-modal');
+    setTimeout(() => {
+      hiddenModal()
+    },2000)
+  }
+
   const hiddenModal = () => {
     document.querySelector('#modalId')?.classList.add('hidden-modal');
+    document.querySelector('#modalIdLead')?.classList.add('hidden-modal');
   }
 
   const goToNextStep = () => {
@@ -310,8 +323,8 @@ const App = () => {
   }
 
   const checkRegexName = () => {
-    var regexDuasPalavras = /^\S+\s+\S+$/;
-    return regexDuasPalavras.test(data.name)
+    var regexName = /\s/;
+    return regexName.test(data.name)
   }
 
   const getOffers = () => {
@@ -395,6 +408,7 @@ const App = () => {
         <form className="container-form">
           <div>{currentComponent}</div>
           <ModalErro msg = {msgError}></ModalErro>
+          <ModalExistingLead></ModalExistingLead>
         </form>
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
       </div>
