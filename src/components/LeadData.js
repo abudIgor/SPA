@@ -5,17 +5,17 @@ const LeadData = ({data, updateFieldHandler}) => {
     return (
         <div className="address-container">
             <div className="title-input">Nome Completo</div>
-            <input className="general-input"
+            <input  placeholder="José Silva" className="general-input" 
                 onChange={(e) => updateFieldHandler("name",e.target.value)}
             ></input>
             <div className="title-input">Telefone</div>
-            <input className="general-input"
+            <input placeholder="(DD) 999999999" className="general-input"
                 onKeyPress={(e) => checkNumber(e)}
                 onChange={(e) => updateFieldHandler("phone",e.target.value)}
             ></input>
 
             <div className="title-input">E-mail</div>
-            <input className="general-input"
+            <input placeholder="jose.silva@email.com" className="general-input"
                 onChange={(e) => updateFieldHandler("email",e.target.value)}
             ></input>
             <div className="checkbox-container">
