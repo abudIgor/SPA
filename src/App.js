@@ -1,5 +1,9 @@
 import React, {useState } from "react";
 
+/*Import Static Files*/
+import catalog from "./staticFiles/offers";
+import slots from "./staticFiles/slots";
+
 /*Import APIs*/
 import apiCEP from "./api/apiCEP";
 import apiLead from "./api/apiLead";
@@ -134,7 +138,6 @@ const App = () => {
   }
 
   const handleChangeStateButton = () => {
-    console.log(paymentInfo)
     if      (currentStep === 1 && data.cep) enableButton()
     else if (currentStep === 2 && data.logradouro && (data.numero || hasNumber) && data.bairro && data.uf) enableButton()
     else if (currentStep === 3 && data.email && data.name && data.phone && agreementShareData) enableButton()
@@ -174,7 +177,6 @@ const App = () => {
 
     if(currentStep === 1) {
       getAddressByCep(data.cep).then((resp) => {
-        console.log('resp',resp.data)
         if(resp.data && resp.data.cep) {
           setIsLoading(false)
           hiddenModal()
@@ -228,7 +230,6 @@ const App = () => {
           } else {
             createLead().then((resp) => {
               setIsLoading(false)
-              console.log(resp)
               getOffers();
               goToNextStep();
             });
@@ -241,7 +242,6 @@ const App = () => {
     }
 
     if(currentStep === 5) {
-      //Save Contact Information
       getSlots();
       goToNextStep();
     }
@@ -285,7 +285,6 @@ const App = () => {
     } else {
       disableButton();
     }
-    console.log('data>>>',data)
   }
 
   const createLead = async () => {
@@ -328,59 +327,12 @@ const App = () => {
   }
 
   const getOffers = () => {
-    products = [ 
-      {
-        productCode : 'BL_100MB',
-        productName : 'Banda Larga 100 Megas',
-        price       : '99.99'
-      },
-      {
-        productCode : 'BL_200MB',
-        productName : 'Banda Larga 200 Megas',
-        price       : '129.99'
-      },
-      {
-        productCode : 'BL_300MB',
-        productName : 'Banda Larga 300 Megas',
-        price       : '199.99'
-      },
-      {
-        productCode : 'BL_400MB',
-        productName : 'Banda Larga 400 Megas',
-        price       : '259.99'
-      },
-      {
-        productCode : 'BL_500MB',
-        productName : 'Banda Larga 500 Megas',
-        price       : '299.99'
-      },
-    ]
+    products = catalog;
   }
 
   const getSlots = () => {
     if(parseInt(Math.random() * 3) === 0) return;
-    slotsAvaiable = [
-      {
-        day  : "23-02-2023",
-        hour : "08:00"
-      },
-      {
-        day  : "23-02-2023",
-        hour : "09:00"
-      },
-      {
-        day  : "23-02-2023",
-        hour : "09:30"
-      },
-      {
-        day  : "24-02-2023",
-        hour : "10:30"
-      },
-      {
-        day  : "25-02-2023",
-        hour : "08:30"
-      },
-    ]
+    slotsAvaiable = slots;
   }
 
   const getAddressByCep = async (cep) => {
