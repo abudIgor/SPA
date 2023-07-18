@@ -21,14 +21,17 @@ import ModalErro from "./components/ModalErro";
 import PersonalData from "./components/PersonsalData";
 import Payment from "./components/Payment";
 import LoadingSpinner from "./components/Spinner";
+import ModalExistingLead from "./components/ModalExistingLead";
+
 
 /*Import Css*/
 import './App.css';
 
 /*Import Hooks*/
 import {useChangeStep} from "./hooks/useChangeStep";
-import ModalExistingLead from "./components/ModalExistingLead";
 
+/*Import Utils*/
+import helpers from "./utils/helpers";
 
 const formTemplate = {
   name : "",
@@ -78,21 +81,13 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const updateFieldHandler = (key,value) => {
-    if(key === "addressWithoutNumber") {
-      handleNoNumber(value)
-    }
+    if(key === "addressWithoutNumber") handleNoNumber(value)
 
-    if(key === "agreementSharingData") {
-      agreementShareData = value;
-    }
+    if(key === "agreementSharingData") agreementShareData = value;
 
-    if(key === "paymentType") {
-      paymentInfo.paymentType = value;
-    }
+    if(key === "paymentType") paymentInfo.paymentType = value;
 
-    if(key === "dueDate") {
-      paymentInfo.dueDate = value;
-    }
+    if(key === "dueDate") paymentInfo.dueDate = value;
 
     if(value?.nativeEvent?.srcElement?.id) {
       handleSelectedProduct(value.nativeEvent.srcElement.id);
@@ -205,13 +200,13 @@ const App = () => {
     }
     
     if(currentStep === 3) {
-      if(!checkRegexPhone()) {
+      if(!helpers.checkRegexPhone(data.phone)) {
         setMsgError('Verifique o número do Telefone e tente novamente.')
         displayModalError()
         return 
       }
 
-      if(!checkRegexName()) {
+      if(!helpers.checkRegexName(data.name)) {
         setMsgError('Verifique o Nome Completo e tente novamente.')
         displayModalError()
         return 
@@ -242,8 +237,13 @@ const App = () => {
     }
 
     if(currentStep === 5) {
-      getSlots();
-      goToNextStep();
+      if(helpers.checkCPFRules(data.cpf)) {
+        getSlots();
+        goToNextStep();
+      } else {
+        setMsgError('Verifique o CPF e tente novamente.')
+        displayModalError()
+      }
     }
 
     if(currentStep === 6) {
@@ -315,17 +315,6 @@ const App = () => {
     return await res;
   }
 
-  const checkRegexPhone = () =>{
-    var regexNumeros = /^[0-9]+$/;
-    var regexTamanho = /^.{11}$/;
-    return (regexNumeros.test(data.phone) && regexTamanho.test(data.phone))
-  }
-
-  const checkRegexName = () => {
-    var regexName = /\s/;
-    return regexName.test(data.name)
-  }
-
   const getOffers = () => {
     products = catalog;
   }
@@ -337,16 +326,8 @@ const App = () => {
 
   const getAddressByCep = async (cep) => {
     setIsLoading(true)
-    const res = await apiCEP.get(cleanCep(cep)+"/json");
+    const res = await apiCEP.get(helpers.cleanCep(cep)+"/json");
     return await res;
-  }
-
-  const cleanCep = (cep) => {
-    return cep.replace(/\s/g, "");
-  }
-
-  const goToWpp = () => {
-    window.open("https://wa.me/5532991488518", "_blank");
   }
 
   return (
@@ -365,7 +346,7 @@ const App = () => {
         <NextButton onClick={handleChangeStep} isDisabled = {buttonState}>{currentStep}</NextButton>
       </div>
       <div className="icon-container">
-        <div className="wpp-image" onClick={goToWpp} data-hover="Dúvidas? Entre em contato!">
+        <div className="wpp-image" onClick={helpers.goToWpp} data-hover="Dúvidas? Entre em contato!">
         </div>
       </div>
     </>
