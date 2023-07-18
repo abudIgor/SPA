@@ -213,7 +213,7 @@ const App = () => {
       }
       
       getLeadByPhone().then((resp) => {
-          if(resp.data.length && resp.data[0].email !== data.email && resp.data[0].name !== data.name) {
+          if(resp.data.length && (resp.data[0].email !== data.email || resp.data[0].name !== data.name)) {
             updateLead(resp.data[0]._id).then((resp) => {
               setIsLoading(false);
               showExistingLeadModal();
